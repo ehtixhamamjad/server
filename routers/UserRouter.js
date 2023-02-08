@@ -1,5 +1,19 @@
 import express from "express";
-import { register, verify, login, logout, addPlans, removePlans, updatePlans, getMyProfile, updateProfile, updatePassword, forgetPassword, resetPassword, upload } from "../controllers/UserController.js";
+import {
+  register,
+  verify,
+  login,
+  logout,
+  addPlans,
+  removePlans,
+  updatePlans,
+  getMyProfile,
+  updateProfile,
+  updatePassword,
+  forgetPassword,
+  resetPassword,
+  upload,
+} from "../controllers/UserController.js";
 import { isAuthenticated } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -13,7 +27,6 @@ router.route("/logout").get(logout);
 
 router.route("/profile").get(isAuthenticated, getMyProfile);
 
-
 router.route("/newPlans").post(isAuthenticated, addPlans);
 router
   .route("/plan/:planId")
@@ -22,12 +35,10 @@ router
 
 router.route("/updateprofile").put(isAuthenticated, updateProfile);
 router.route("/updatepassword").put(isAuthenticated, updatePassword);
-  
+
 router.route("/forgetpassword").post(forgetPassword);
 router.route("/resetpassword").put(resetPassword);
 
 router.route("/upload").post(upload);
-
-  
 
 export default router;
