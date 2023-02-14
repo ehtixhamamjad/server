@@ -1,4 +1,5 @@
 import { Nursery } from "../models/nurseryModels.js";
+import { User } from "../models/usersModel.js";
 import { sendMail } from "../utils/sendMail.js";
 import { sendToken } from "../utils/sendToken.js";
 import cloudinary from "cloudinary";
@@ -67,10 +68,10 @@ export const register = async (req, res) => {
 };
 
 export const verify = async (req, res) => {
+  console.log(req.nursery);
   try {
     const otp = Number(req.body.otp);
-
-    const user = await Nursery.findById(req.user._id);
+    const user = await Nursery.findById(req.nursery._id);
 
     if (user.otp !== otp || user.otp_expiry < Date.now()) {
       return res
@@ -213,7 +214,7 @@ export const removePlans = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const user = await Nursery.findById(req.user._id);
+    const user = await Nursery.findById(req.nursery._id);
 
     const { name } = req.body;
     // const avatar = req.files.avatar.tempFilePath;

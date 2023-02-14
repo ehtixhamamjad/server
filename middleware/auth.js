@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/usersModel.js";
+import { Nursery } from "../models/nurseryModels.js";
 
 export const isAuthenticated = async (req, res, next) => {
   try {
@@ -12,6 +13,7 @@ export const isAuthenticated = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     req.user = await User.findById(decoded._id);
+    req.nursery = await Nursery.findById(decoded._id);
 
     next();
   } catch (error) {
