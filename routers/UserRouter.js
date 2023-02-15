@@ -13,6 +13,10 @@ import {
   forgetPassword,
   resetPassword,
   upload,
+  getFlower,
+  allFlower,
+  cityWiseFlower,
+  nurseryInYourArea,
 } from "../controllers/UserController.js";
 import { isAuthenticated } from "../middleware/auth.js";
 
@@ -40,5 +44,14 @@ router.route("/forgetpassword").post(forgetPassword);
 router.route("/resetpassword").put(resetPassword);
 
 router.route("/upload").post(upload);
+
+router.route("/flower/:flowerId").get(isAuthenticated, getFlower);
+
+router.route("/allflower").get(isAuthenticated, allFlower);
+router
+  .route("/citywiseflower/:flowerCity")
+  .get(isAuthenticated, cityWiseFlower);
+
+router.route("/allnursery/:cityName").get(isAuthenticated, nurseryInYourArea);
 
 export default router;

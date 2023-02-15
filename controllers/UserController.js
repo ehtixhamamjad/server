@@ -1,8 +1,11 @@
 import { User } from "../models/usersModel.js";
 import { sendMail } from "../utils/sendMail.js";
 import { sendToken } from "../utils/sendToken.js";
+import { Flower } from "../models/flowerModel.js";
+
 import cloudinary from "cloudinary";
 import fs from "fs";
+import { Nursery } from "../models/nurseryModel.js";
 
 export const upload = async (req, res) => {
   try {
@@ -321,6 +324,55 @@ export const resetPassword = async (req, res) => {
     res
       .status(200)
       .json({ success: true, message: `Password Changed Successfully` });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getFlower = async (req, res) => {
+  try {
+    const { flowerId } = req.params;
+    const flower = await Flower.findById(flowerId);
+
+    console.log(flower);
+
+    res.status(200).json({ success: true, data: flower });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+export const allFlower = async (req, res) => {
+  try {
+    const flower = await Flower.find();
+    console.log(flower);
+
+    res.status(200).json({ success: true, data: flower });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+export const cityWiseFlower = async (req, res) => {
+  try {
+    const { flowerCity } = req.params;
+
+    let cityFlower = await Flower.find({ city: flowerCity });
+
+    if (cityFlower) {
+      res.status(200).json({ success: true, data: cityFlower });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+export const nurseryInYourArea = async (req, res) => {
+  try {
+    const { cityName } = req.params;
+
+    let nursery = await Nursery.find({ city: cityName });
+
+    if (nursery) {
+      res.status(200).json({ success: true, data: nursery });
+    }
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
