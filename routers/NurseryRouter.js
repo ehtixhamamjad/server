@@ -4,9 +4,10 @@ import {
   verify,
   login,
   logout,
-  addPlans,
-  removePlans,
-  updatePlans,
+  addFlowers,
+  getFlower,
+  updateFlower,
+  removeFlower,
   getMyProfile,
   updateProfile,
   updatePassword,
@@ -27,11 +28,14 @@ router.route("/logout").get(logout);
 
 router.route("/profile").get(isAuthenticated, getMyProfile);
 
-router.route("/newPlans").post(isAuthenticated, addPlans);
+router.route("/addFlowers").post(isAuthenticated, addFlowers);
+
+router.route("/flower/:flowerId").get(isAuthenticated, getFlower);
+
 router
-  .route("/plan/:planId")
-  .get(isAuthenticated, updatePlans)
-  .delete(isAuthenticated, removePlans);
+  .route("/flower/:flowerId")
+  .get(isAuthenticated, updateFlower)
+  .delete(isAuthenticated, removeFlower);
 
 router.route("/updateprofile").put(isAuthenticated, updateProfile);
 router.route("/updatepassword").put(isAuthenticated, updatePassword);

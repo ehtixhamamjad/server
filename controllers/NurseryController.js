@@ -1,4 +1,5 @@
-import { Nursery } from "../models/nurseryModels.js";
+import { Nursery } from "../models/nurseryModel.js";
+import { Flower } from "../models/flowerModel.js";
 import { User } from "../models/usersModel.js";
 import { sendMail } from "../utils/sendMail.js";
 import { sendToken } from "../utils/sendToken.js";
@@ -101,8 +102,7 @@ export const login = async (req, res) => {
         .json({ success: false, message: "Please enter all fields" });
     }
 
-    const user = await User.findOne({ email }).select("+password");
-
+    const user = await Nursery.findOne({ email }).select("+password");
     if (!user) {
       return res
         .status(400)
@@ -146,64 +146,74 @@ export const logout = async (req, res) => {
   }
 };
 
-export const addPlans = async (req, res) => {
+export const addFlowers = async (req, res) => {
   try {
     const { title, description } = req.body;
 
-    const user = await Nursery.findById(req.user._id);
     if (!title) {
       return res
         .status(400)
         .json({ success: false, message: "Title is Empty" });
     }
-
-    user.plans.push({
+    const user = await Nursery.findById(req.nursery._id);
+    console.log(user.city);
+    const city = user.city;
+    Flower.create({
       title,
       description,
-      completed: false,
+      city,
       createdAt: new Date(Date.now()),
     });
 
-    await user.save();
-
-    res.status(200).json({ success: true, message: "Plan added successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Flower added successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-export const updatePlans = async (req, res) => {
+export const getFlower = async (req, res) => {
   try {
-    const { planId } = req.params;
+    const { flowerId } = req.params;
+    const flower = await Flower.findById(flowerId);
 
-    const user = await User.findById(req.user._id);
+    console.log(flower);
 
-    user.plan = user.plans.find(
-      (plan) => plan._id.toString() === planId.toString()
-    );
+    res.status(200).json({ success: true, data: flower });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+export const updateFlower = async (req, res) => {
+  try {
+    const { flowerId } = req.params;
+    const flower = await Flower.findById(flowerId);
+    const { title, description } = req.body;
+    if (title) flower.title = title;
+    if (description) flower.description = description;
+    // const user = await Flower.findById(req.user._id);
 
-    user.plan.completed = !user.plan.completed;
+    // user.plan = user.plans.find(
+    //   (plan) => plan._id.toString() === flowerId.toString()
+    // );
 
-    await user.save();
+    // user.plan.completed = !user.plan.completed;
+
+    await flower.save();
 
     res
       .status(200)
-      .json({ success: true, message: "Plan Updated successfully" });
+      .json({ success: true, message: "Flower Updated successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-export const removePlans = async (req, res) => {
+
+export const removeFlower = async (req, res) => {
   try {
-    const { planId } = req.params;
-    const user = await Nursery.findById(req.user._id);
-
-    user.plans = user.plans.filter(
-      (plan) => plan._id.toString() !== planId.toString()
-    );
-
-    await user.save();
-
+    const { flowerId } = req.params;
+    await Flower.findByIdAndRemove(flowerId);
     res
       .status(200)
       .json({ success: true, message: "Plan removed successfully" });

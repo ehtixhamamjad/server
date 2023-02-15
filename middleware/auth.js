@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/usersModel.js";
-import { Nursery } from "../models/nurseryModels.js";
+import { Nursery } from "../models/nurseryModel.js";
 
 export const isAuthenticated = async (req, res, next) => {
   try {
